@@ -9,31 +9,45 @@ export function CustomCursor() {
   const [hovering, setHovering] = useState(false);
   const [videoHover, setVideoHover] = useState(false);
   const [visible, setVisible] = useState(false);
-  const rafRef = useRef<number>(0);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (settings?.theme?.cursor_enabled === false) return;
-    if (typeof window === 'undefined') return;
-    if (window.matchMedia('(hover: none)').matches) return;
+    const enabled = settings?.theme?.cursor_enabled !== false;
+    const supportsHover = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+    if (!enabled || !supportsHover) {
+      document.body.style.cursor = '';
+      document.documentElement.style.cursor = '';
+      document.body.classList.remove('cursor-none');
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      setVisible(false);
+      return;
+    }
+
+    document.body.style.cursor = 'none';
+    document.documentElement.style.cursor = 'none';
     document.body.classList.add('cursor-none');
 
-    let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
+    let mouseX = 0;
+    let mouseY = 0;
+    let cursorX = 0;
+    let cursorY = 0;
 
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+    const onMove = (event: MouseEvent) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
       setVisible(true);
 
-      const target = e.target as HTMLElement;
-      const isLink = target.closest('a, button, [role="button"], input, textarea, select, label, [data-cursor="hover"]');
-      const isVideo = target.closest('[data-cursor="video"], .project-card, .video-embed');
-      setHovering(!!isLink);
-      setVideoHover(!!isVideo);
+      const target = event.target as HTMLElement | null;
+      const isLink = !!target?.closest('a, button, [role="button"], input, textarea, select, label, [data-cursor="hover"]');
+      const isVideo = !!target?.closest('[data-cursor="video"], .project-card, .video-embed');
+      setHovering(isLink);
+      setVideoHover(isVideo);
     };
 
     const onLeave = () => setVisible(false);
+    const onBlur = () => setVisible(false);
 
     const animate = () => {
       cursorX += (mouseX - cursorX) * 0.18;
@@ -43,23 +57,31 @@ export function CustomCursor() {
     };
 
     window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseleave', onLeave);
+    window.addEventListener('blur', onBlur);
     document.addEventListener('mouseleave', onLeave);
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
+      document.body.style.cursor = '';
+      document.documentElement.style.cursor = '';
       document.body.classList.remove('cursor-none');
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('blur', onBlur);
       document.removeEventListener('mouseleave', onLeave);
-      cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     };
   }, [settings?.theme?.cursor_enabled]);
 
   if (settings?.theme?.cursor_enabled === false) return null;
 
-  const size = videoHover ? 80 : hovering ? 48 : 20;
+  const size = videoHover ? 72 : hovering ? 42 : 18;
 
   return (
     <div
+      aria-hidden="true"
       className="pointer-events-none fixed z-[9999] hidden md:flex items-center justify-center transition-[width,height,opacity] duration-300 ease-cinematic"
       style={{
         left: position.x,
@@ -68,6 +90,7 @@ export function CustomCursor() {
         height: size,
         transform: 'translate(-50%, -50%)',
         opacity: visible ? 1 : 0,
+        filter: 'drop-shadow(0 0 18px rgba(var(--accent-rgb), 0.28))',
       }}
     >
       <div
@@ -75,14 +98,16 @@ export function CustomCursor() {
         style={{
           width: '100%',
           height: '100%',
-          borderColor: videoHover ? 'hsl(var(--accent))' : 'hsl(var(--foreground) / 0.4)',
-          backgroundColor: videoHover ? 'hsl(var(--accent) / 0.1)' : 'transparent',
-          backdropFilter: videoHover ? 'blur(2px)' : 'none',
+          borderColor: videoHover ? 'hsl(var(--accent))' : 'hsl(var(--foreground) / 0.5)',
+          backgroundColor: videoHover ? 'hsl(var(--accent) / 0.12)' : 'rgba(255,255,255,0.06)',
+          borderWidth: videoHover ? 1.5 : 1,
+          boxShadow: hovering ? '0 0 0 1px hsl(var(--accent) / 0.28)' : 'none',
+          backdropFilter: 'blur(2px)',
         }}
       >
         {videoHover && (
-          <div className="w-full h-full flex items-center justify-center text-[10px] font-mono uppercase tracking-widest text-accent">
-            Play
+          <div className="w-full h-full flex items-center justify-center text-[8px] font-medium uppercase tracking-[0.2em] text-accent">
+            {settings?.theme?.default_theme === 'ar' ? 'مشاهدة' : 'Play'}
           </div>
         )}
       </div>

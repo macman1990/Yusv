@@ -4,48 +4,45 @@
 
 @layer base {
   :root {
-    /* Light theme - carefully designed, not just inverted */
-    --background: 42 33% 97%;
-    --foreground: 30 10% 10%;
+    --background: 210 24% 98%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 30 10% 10%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 10%;
-    --primary: 30 10% 12%;
-    --primary-foreground: 42 33% 97%;
-    --secondary: 42 20% 92%;
-    --secondary-foreground: 30 10% 12%;
-    --muted: 42 15% 90%;
-    --muted-foreground: 30 5% 40%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 24% 98%;
+    --secondary: 210 29% 96%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 210 24% 96%;
+    --muted-foreground: 219 13% 40%;
     --accent: 41 77% 57%;
-    --accent-foreground: 30 10% 10%;
+    --accent-foreground: 30 12% 8%;
+    --accent-rgb: 212 101 67;
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 30 10% 86%;
-    --input: 30 10% 84%;
+    --border: 214 32% 88%;
+    --input: 214 32% 86%;
     --ring: 41 77% 57%;
 
-    /* Custom design tokens */
-    --surface: 42 25% 94%;
+    --surface: 210 29% 96%;
+    --surface-secondary: 210 33% 94%;
     --surface-elevated: 0 0% 100%;
+    --hero-background: 210 29% 97%;
+    --hero-foreground: 222 47% 11%;
     --glow: 41 77% 57%;
-    --border-subtle: 30 10% 88%;
-    --text-muted: 30 5% 45%;
-    --cinematic-black: 0 0% 3%;
-    --cinematic-graphite: 220 10% 14%;
+    --border-subtle: 214 32% 90%;
+    --text-muted: 219 13% 42%;
+    --cinematic-black: 220 15% 12%;
+    --cinematic-graphite: 222 15% 18%;
 
     --radius: 0.625rem;
+    --font-body: var(--font-ibm-plex-sans), system-ui, sans-serif;
+    --font-heading: var(--font-ibm-plex-sans), system-ui, sans-serif;
+    --font-arabic-body: var(--font-ibm-plex-arabic), system-ui, sans-serif;
+    --font-arabic-heading: var(--font-ibm-plex-arabic), system-ui, sans-serif;
 
-    /* Fonts */
-    --font-heading: 'Space Grotesk', system-ui, sans-serif;
-    --font-body: 'Inter', system-ui, sans-serif;
-    --font-arabic-heading: 'Tajawal', system-ui, sans-serif;
-    --font-arabic-body: 'Cairo', system-ui, sans-serif;
-
-    /* Spacing */
     --space-section: 6rem;
-
-    /* Motion */
     --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     --duration-slow: 0.8s;
@@ -54,35 +51,37 @@
   }
 
   .dark {
-    /* Dark theme - primary experience */
-    --background: 0 0% 3.5%;
-    --foreground: 40 15% 96%;
-    --card: 0 0% 5.5%;
-    --card-foreground: 40 15% 96%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 40 15% 96%;
-    --primary: 40 15% 96%;
-    --primary-foreground: 0 0% 3.5%;
-    --secondary: 220 10% 10%;
-    --secondary-foreground: 40 15% 96%;
-    --muted: 220 10% 9%;
-    --muted-foreground: 40 5% 55%;
+    --background: 220 18% 7%;
+    --foreground: 39 20% 96%;
+    --card: 220 16% 10%;
+    --card-foreground: 39 20% 96%;
+    --popover: 220 16% 9%;
+    --popover-foreground: 39 20% 96%;
+    --primary: 39 20% 96%;
+    --primary-foreground: 220 18% 7%;
+    --secondary: 220 14% 12%;
+    --secondary-foreground: 39 20% 96%;
+    --muted: 220 14% 11%;
+    --muted-foreground: 40 10% 68%;
     --accent: 41 77% 57%;
-    --accent-foreground: 0 0% 3.5%;
+    --accent-foreground: 0 0% 4%;
+    --accent-rgb: 232 176 85;
     --destructive: 0 62% 45%;
     --destructive-foreground: 0 0% 96%;
-    --border: 220 10% 14%;
-    --input: 220 10% 12%;
+    --border: 220 12% 18%;
+    --input: 220 12% 15%;
     --ring: 41 77% 57%;
 
-    /* Custom design tokens */
-    --surface: 0 0% 5%;
-    --surface-elevated: 0 0% 7%;
+    --surface: 220 16% 9%;
+    --surface-secondary: 220 12% 12%;
+    --surface-elevated: 220 14% 12%;
+    --hero-background: 220 18% 7%;
+    --hero-foreground: 39 20% 96%;
     --glow: 41 77% 57%;
-    --border-subtle: 220 10% 12%;
-    --text-muted: 40 5% 50%;
-    --cinematic-black: 0 0% 3%;
-    --cinematic-graphite: 220 10% 8%;
+    --border-subtle: 220 12% 17%;
+    --text-muted: 40 10% 68%;
+    --cinematic-black: 220 18% 7%;
+    --cinematic-graphite: 220 12% 12%;
   }
 }
 
@@ -90,11 +89,15 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
@@ -107,15 +110,18 @@
     font-family: var(--font-arabic-heading);
     letter-spacing: 0;
   }
+  ::selection {
+    background: hsl(var(--accent) / 0.25);
+    color: hsl(var(--foreground));
+  }
 }
 
 @layer utilities {
-  /* Cinematic gradients */
   .bg-cinematic {
-    background: radial-gradient(ellipse at top, hsl(220 10% 8%) 0%, hsl(0 0% 3.5%) 70%);
+    background: radial-gradient(ellipse at top, hsl(var(--surface-secondary)) 0%, hsl(var(--hero-background)) 70%);
   }
   .bg-cinematic-light {
-    background: radial-gradient(ellipse at top, hsl(42 33% 96%) 0%, hsl(42 20% 93%) 70%);
+    background: radial-gradient(ellipse at top, hsl(var(--surface-secondary)) 0%, hsl(var(--hero-background)) 70%);
   }
   .bg-grid {
     background-image: linear-gradient(hsl(var(--border-subtle) / 0.5) 1px, transparent 1px),
@@ -134,138 +140,50 @@
     z-index: 1;
   }
 
-  /* Glow effects */
   .glow-accent {
-    box-shadow: 0 0 40px hsl(var(--glow) / 0.15);
+    box-shadow: 0 0 40px hsl(var(--glow) / 0.12);
   }
   .text-glow {
-    text-shadow: 0 0 30px hsl(var(--glow) / 0.3);
+    text-shadow: 0 0 30px hsl(var(--glow) / 0.2);
   }
 
-  /* Glassmorphism - subtle */
   .glass {
-    background: hsl(var(--card) / 0.6);
+    background: hsl(var(--card) / 0.72);
     backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border-subtle) / 0.5);
+    border: 1px solid hsl(var(--border-subtle) / 0.8);
   }
 
-  /* Animations */
-  .animate-fade-up {
-    animation: fade-up var(--duration-slow) var(--ease-cinematic) forwards;
-  }
-  .animate-fade-in {
-    animation: fade-in var(--duration-slow) var(--ease-smooth) forwards;
-  }
-  .animate-scale-in {
-    animation: scale-in var(--duration-medium) var(--ease-cinematic) forwards;
-  }
-  .animate-slide-right {
-    animation: slide-right var(--duration-slow) var(--ease-cinematic) forwards;
-  }
-  .animate-slide-left {
-    animation: slide-left var(--duration-slow) var(--ease-cinematic) forwards;
-  }
-  .animate-blur-reveal {
-    animation: blur-reveal var(--duration-slow) var(--ease-cinematic) forwards;
-  }
-  .animate-marquee {
-    animation: marquee 30s linear infinite;
-  }
-  .animate-shimmer {
-    animation: shimmer 2s linear infinite;
-  }
-  .animate-pulse-glow {
-    animation: pulse-glow 3s var(--ease-smooth) infinite;
-  }
-  .animate-float {
-    animation: float 6s var(--ease-smooth) infinite;
-  }
+  .animate-fade-up { animation: fade-up var(--duration-slow) var(--ease-cinematic) forwards; }
+  .animate-fade-in { animation: fade-in var(--duration-slow) var(--ease-smooth) forwards; }
+  .animate-scale-in { animation: scale-in var(--duration-medium) var(--ease-cinematic) forwards; }
+  .animate-slide-right { animation: slide-right var(--duration-slow) var(--ease-cinematic) forwards; }
+  .animate-slide-left { animation: slide-left var(--duration-slow) var(--ease-cinematic) forwards; }
+  .animate-blur-reveal { animation: blur-reveal var(--duration-slow) var(--ease-cinematic) forwards; }
+  .animate-marquee { animation: marquee 30s linear infinite; }
+  .animate-shimmer { animation: shimmer 2s linear infinite; }
+  .animate-pulse-glow { animation: pulse-glow 3s var(--ease-smooth) infinite; }
+  .animate-float { animation: float 6s var(--ease-smooth) infinite; }
 
-  /* Scroll reveal initial states */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic);
-  }
-  .reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .reveal-left {
-    opacity: 0;
-    transform: translateX(-40px);
-    transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic);
-  }
-  .reveal-left.revealed {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .reveal-right {
-    opacity: 0;
-    transform: translateX(40px);
-    transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic);
-  }
-  .reveal-right.revealed {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  .reveal-scale {
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic);
-  }
-  .reveal-scale.revealed {
-    opacity: 1;
-    transform: scale(1);
-  }
-  .reveal-blur {
-    opacity: 0;
-    filter: blur(10px);
-    transition: opacity var(--duration-slow) var(--ease-cinematic), filter var(--duration-slow) var(--ease-cinematic);
-  }
-  .reveal-blur.revealed {
-    opacity: 1;
-    filter: blur(0);
-  }
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic); }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic); }
+  .reveal-left.revealed { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(40px); transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic); }
+  .reveal-right.revealed { opacity: 1; transform: translateX(0); }
+  .reveal-scale { opacity: 0; transform: scale(0.95); transition: opacity var(--duration-slow) var(--ease-cinematic), transform var(--duration-slow) var(--ease-cinematic); }
+  .reveal-scale.revealed { opacity: 1; transform: scale(1); }
+  .reveal-blur { opacity: 0; filter: blur(10px); transition: opacity var(--duration-slow) var(--ease-cinematic), filter var(--duration-slow) var(--ease-cinematic); }
+  .reveal-blur.revealed { opacity: 1; filter: blur(0); }
 
-  /* Custom scrollbar */
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(var(--border));
-    border-radius: 3px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--muted-foreground));
-  }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground)); }
 
-  /* Text gradient */
-  .text-gradient {
-    background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--accent)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .text-gradient-accent {
-    background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent) / 0.7));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+  .text-gradient { background: linear-gradient(135deg, hsl(var(--foreground)), hsl(var(--accent))); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .text-gradient-accent { background: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent) / 0.7)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 
-  /* Magnetic button base */
-  .magnetic {
-    transition: transform 0.3s var(--ease-cinematic);
-  }
-
-  /* Custom cursor */
-  .cursor-none, .cursor-none * {
-    cursor: none !important;
-  }
+  .magnetic { transition: transform 0.3s var(--ease-cinematic); }
 }
 
 @keyframes fade-up {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { supabase, type Project, type Category, type Service, type Skill, type Tool, type Experience, type Education, type Certification, type Testimonial, type Stat, type ContentItem, type SocialLink, type NavItem, type Section, type Page, type SiteSettings } from '@/lib/supabase';
+import { supabase, hasSupabaseConnection, type Project, type Category, type Service, type Skill, type Tool, type Experience, type Education, type Certification, type Testimonial, type Stat, type ContentItem, type SocialLink, type NavItem, type Section, type Page, type SiteSettings } from '@/lib/supabase';
 
 export type PortfolioData = {
   settings: SiteSettings | null;
@@ -22,12 +22,38 @@ export type PortfolioData = {
   pages: Page[];
 };
 
+const emptyPortfolioData: PortfolioData = {
+  settings: null,
+  categories: [],
+  projects: [],
+  services: [],
+  skills: [],
+  tools: [],
+  experience: [],
+  education: [],
+  certifications: [],
+  testimonials: [],
+  stats: [],
+  contentItems: [],
+  socialLinks: [],
+  navItems: [],
+  sections: [],
+  pages: [],
+};
+
 export function usePortfolioData() {
-  const [data, setData] = useState<PortfolioData | null>(null);
+  const [data, setData] = useState<PortfolioData | null>(emptyPortfolioData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(async () => {
+    if (!hasSupabaseConnection()) {
+      setData(emptyPortfolioData);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -54,7 +80,6 @@ export function usePortfolioData() {
         supabase.from('pages').select('*').order('sort_order'),
       ]);
 
-      // Check for errors
       const errors = [settingsRes, projectsRes, servicesRes].filter(r => r.error);
       if (errors.length > 0) {
         console.error('Data fetch errors:', errors);
@@ -85,6 +110,7 @@ export function usePortfolioData() {
       });
     } catch (err: any) {
       setError(err.message);
+      setData(emptyPortfolioData);
     } finally {
       setLoading(false);
     }
