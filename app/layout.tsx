@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from 'next/font/google';
 import { AppProvider } from '@/components/providers/app-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { Analytics } from '@vercel/analytics/next';
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Toaster />
         </AppProvider>
+        <Analytics />
       </body>
     </html>
   );
