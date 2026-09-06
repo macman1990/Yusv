@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, Tajawal, Cairo } from 'next/font/google';
 import { AppProvider } from '@/components/providers/app-provider';
 import { Toaster } from '@/components/ui/sonner';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk', display: 'swap' });
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Toaster />
         </AppProvider>
+        <Analytics />
       </body>
     </html>
   );
