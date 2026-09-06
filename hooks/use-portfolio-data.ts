@@ -77,8 +77,10 @@ export function usePortfolioData() {
         supabase.from('social_links').select('*').order('sort_order'),
         supabase.from('nav_items').select('*').order('sort_order'),
         supabase.from('sections').select('*').order('sort_order'),
-        supabase.from('pages').select('*').order('sort_order'),
+        supabase.from('pages').select('*'),
       ]);
+
+      const safePages = (pagesRes.data || []).slice().sort((a: any, b: any) => ((a.sort_order ?? 0) - (b.sort_order ?? 0)) || new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime());
 
       const errors = [settingsRes, projectsRes, servicesRes].filter(r => r.error);
       if (errors.length > 0) {
@@ -106,7 +108,7 @@ export function usePortfolioData() {
         socialLinks: (socialRes.data || []) as SocialLink[],
         navItems: (navRes.data || []) as NavItem[],
         sections: (sectionsRes.data || []) as Section[],
-        pages: (pagesRes.data || []) as Page[],
+        pages: safePages as Page[],
       });
     } catch (err: any) {
       setError(err.message);

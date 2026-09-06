@@ -335,10 +335,12 @@ CREATE TABLE IF NOT EXISTS pages (
   sections jsonb DEFAULT '[]'::jsonb,
   visible boolean NOT NULL DEFAULT true,
   status text NOT NULL DEFAULT 'published',
+  sort_order int NOT NULL DEFAULT 0,
   created_at timestamptz DEFAULT now()
 );
 
 ALTER TABLE pages ENABLE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS idx_pages_sort ON pages(sort_order);
 
 -- ============ MEDIA ============
 CREATE TABLE IF NOT EXISTS media (

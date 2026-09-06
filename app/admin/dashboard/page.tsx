@@ -64,6 +64,36 @@ export default function DashboardOverview() {
         <p className="text-sm text-muted-foreground">Manage your portfolio content</p>
       </div>
 
+      <Card className="mb-8 border-dashed border-accent/30 bg-accent/5">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base">CMS Guide / دليل النظام</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="font-semibold mb-2">English</p>
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                <li>Create or edit pages in the Pages section and keep the slug unique.</li>
+                <li>Use Sections to build reusable content blocks and assign the right layout type.</li>
+                <li>Update Navigation for top-level anchors, page links, or external URLs.</li>
+                <li>Media Library stores file metadata and image URLs used throughout the site.</li>
+                <li>Keep visible/draft status aligned before publishing to the public site.</li>
+              </ul>
+            </div>
+            <div dir="rtl">
+              <p className="font-semibold mb-2">العربية</p>
+              <ul className="list-disc pr-5 space-y-1 text-muted-foreground">
+                <li>أنشئ الصفحات أو عدّلها من قسم الصفحات، وحافظ على عنوان الرابط slug فريدًا.</li>
+                <li>استخدم الأقسام Sections لبناء كتل محتوى قابلة لإعادة الاستخدام وتحديد نوع التخطيط المناسب.</li>
+                <li>حدّث القائمة الرئيسية Navigation للرابط الداخلي أو الصفحة أو الرابط الخارجي.</li>
+                <li>تخزن مكتبة الوسائط Media معلومات الملف وعناوين الصور المستخدمة في الموقع.</li>
+                <li>تأكد من وضوح حالة التفعيل Visible ودولة النشر Draft/Published قبل العرض العام.</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Stats grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-8">
         {loading

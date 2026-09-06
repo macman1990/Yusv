@@ -177,10 +177,10 @@ async function handleCrud(
   if (method === "GET") {
     let query = admin.from(table).select("*");
     // For admin, return ALL items (including drafts/hidden)
-    const orderBy = searchParams.get("order_by") || "sort_order";
+    const requestedOrderBy = searchParams.get("order_by") || "sort_order";
+    const orderBy = table === "pages" && requestedOrderBy === "sort_order" ? "created_at" : requestedOrderBy;
     const ascending = searchParams.get("ascending") !== "false";
-    query = query.order(orderBy, { ascending });
-    const { data, error } = await query;
+    const { data, error } = await query.order(orderBy, { ascending });
     if (error) return jsonResponse({ error: error.message }, 500);
     return jsonResponse({ data });
   }
