@@ -66,28 +66,66 @@ export default function DashboardOverview() {
 
       <Card className="mb-8 border-dashed border-accent/30 bg-accent/5">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base">CMS Guide / دليل النظام</CardTitle>
+          <CardTitle className="text-base">دليل استخدام لوحة التحكم / CMS Guide</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-sm">
+        <CardContent className="space-y-5 text-sm">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <p className="font-semibold mb-2">English</p>
               <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
-                <li>Create or edit pages in the Pages section and keep the slug unique.</li>
-                <li>Use Sections to build reusable content blocks and assign the right layout type.</li>
-                <li>Update Navigation for top-level anchors, page links, or external URLs.</li>
-                <li>Media Library stores file metadata and image URLs used throughout the site.</li>
-                <li>Keep visible/draft status aligned before publishing to the public site.</li>
+                <li>This dashboard manages the live portfolio content and settings.</li>
+                <li>Changes are saved through the admin API and reflected in the relevant Supabase tables.</li>
+                <li>After saving, the UI shows a success toast; if a request fails, the page shows an error message and logs the technical details.</li>
+                <li>Appearance settings update the public portfolio theme, accent color, and custom cursor state.</li>
+                <li>Projects, sections, pages, media, and navigation all use the same real CMS data source.</li>
               </ul>
             </div>
             <div dir="rtl">
               <p className="font-semibold mb-2">العربية</p>
               <ul className="list-disc pr-5 space-y-1 text-muted-foreground">
-                <li>أنشئ الصفحات أو عدّلها من قسم الصفحات، وحافظ على عنوان الرابط slug فريدًا.</li>
-                <li>استخدم الأقسام Sections لبناء كتل محتوى قابلة لإعادة الاستخدام وتحديد نوع التخطيط المناسب.</li>
-                <li>حدّث القائمة الرئيسية Navigation للرابط الداخلي أو الصفحة أو الرابط الخارجي.</li>
-                <li>تخزن مكتبة الوسائط Media معلومات الملف وعناوين الصور المستخدمة في الموقع.</li>
-                <li>تأكد من وضوح حالة التفعيل Visible ودولة النشر Draft/Published قبل العرض العام.</li>
+                <li>هذه اللوحة تدار فيها محتوى الموقع وإعداداته الحالية.</li>
+                <li>يتم حفظ التعديلات عبر واجهة الإدارة admin API ثم تظهر في جداول Supabase المناسبة.</li>
+                <li>بعد الحفظ يظهر إشعار نجاح، وإذا فشل الطلب يظهر رسائل واضحة ويُسجَّل الخطأ التقني في الـ console.</li>
+                <li>إعدادات المظهر تؤثر على سمة الموقع، لون التمييز، ومؤشر المؤشر المخصص.</li>
+                <li>المشاريع، الأقسام، الصفحات، الوسائط، والقائمة الرئيسية تستفيد من نفس مصدر البيانات الحقيقي.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="font-semibold mb-2">Projects</p>
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                <li>Add a project with title, category, thumbnail, and video/public media link.</li>
+                <li>Edit the details, visibility, and published/draft status as needed.</li>
+                <li>Delete only when you are sure it should be removed from the portfolio.</li>
+              </ul>
+            </div>
+            <div dir="rtl">
+              <p className="font-semibold mb-2">المشاريع</p>
+              <ul className="list-disc pr-5 space-y-1 text-muted-foreground">
+                <li>أضف مشروعًا مع العنوان والفئة والصورة المصغرة ورابط الفيديو أو الوسائط العامة.</li>
+                <li>عدّل التفاصيل والحالة المرئية وحالة النشر أو المسودة عند الحاجة.</li>
+                <li>احذف المشروع فقط عندما تكون متأكدًا من إزالته من العرض العام.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="font-semibold mb-2">Sections, Pages, Media, Navigation</p>
+              <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+                <li>Sections are reusable blocks on a page; Pages are separate routes with their own slug.</li>
+                <li>Media Library currently manages media records and URLs; direct file upload is not implemented unless storage is configured separately.</li>
+                <li>Navigation controls visible menu links for the public site.</li>
+              </ul>
+            </div>
+            <div dir="rtl">
+              <p className="font-semibold mb-2">الأقسام والصفحات والمكتبة والقائمة</p>
+              <ul className="list-disc pr-5 space-y-1 text-muted-foreground">
+                <li>القسم هو جزء قابل لإعادة الاستخدام داخل الصفحة، أما الصفحة فهي مسار مستقل برابط خاص بها.</li>
+                <li>مكتبة الوسائط تدير حاليا بيانات وروابط الوسائط، وليس رفع الملفات مباشرة ما لم يتم إعداد Storage منفصلًا.</li>
+                <li>القائمة الرئيسية تتحكم في الروابط الظاهرة في شريط التنقل العام للموقع.</li>
               </ul>
             </div>
           </div>

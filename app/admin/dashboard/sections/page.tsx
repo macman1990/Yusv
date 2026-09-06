@@ -33,5 +33,15 @@ const config: ResourceConfig = {
 };
 
 export default function SectionsPage() {
-  return <ResourceManager config={config} />;
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-dashed border-border/40 bg-card/30 p-4 text-sm text-muted-foreground">
+        <p className="font-medium text-foreground mb-2">الأقسام / Sections</p>
+        <p dir="rtl" className="leading-7">
+          القسم هو جزء من محتوى الصفحة مثل المشاريع أو الخبرات أو الخدمات. يمكنك تفعيله أو إخفاؤه، ويُستخدم لإعادة استخدام أنواع محتوى محددة داخل الموقع. لا تُخلط بين القسم والصفحة؛ فالصفحة مسار مستقل، بينما القسم جزء داخل محتوى الصفحة.
+        </p>
+      </div>
+      <ResourceManager config={config} />
+    </div>
+  );
 }

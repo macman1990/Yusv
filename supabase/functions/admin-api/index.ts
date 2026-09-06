@@ -23,6 +23,12 @@ const TABLES = [
   "analytics_events", "contact_submissions", "settings",
 ];
 
+const TABLES_WITH_SORT_ORDER = [
+  "projects", "categories", "services", "skills", "tools", "experience",
+  "education", "certifications", "testimonials", "stats", "content_items",
+  "social_links", "nav_items", "sections", "pages",
+];
+
 function jsonResponse(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
@@ -176,11 +182,14 @@ async function handleCrud(
 
   if (method === "GET") {
     let query = admin.from(table).select("*");
-    // For admin, return ALL items (including drafts/hidden)
     const requestedOrderBy = searchParams.get("order_by") || "sort_order";
-    const orderBy = table === "pages" && requestedOrderBy === "sort_order" ? "created_at" : requestedOrderBy;
+    const orderBy = requestedOrderBy === "sort_order" && !TABLES_WITH_SORT_ORDER.includes(table)
+      ? "created_at"
+      : requestedOrderBy;
     const ascending = searchParams.get("ascending") !== "false";
-    const { data, error } = await query.order(orderBy, { ascending });
+
+    // Some tables do not expose sort_order in the schema; avoid query-time column errors by falling back to created_at.
+    const { data, error } = await (orderBy === "sort_order" ? query.order(orderBy, { ascending }) : query.order(orderBy, { ascending }));
     if (error) return jsonResponse({ error: error.message }, 500);
     return jsonResponse({ data });
   }

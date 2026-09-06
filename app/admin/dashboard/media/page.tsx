@@ -6,6 +6,7 @@ const config: ResourceConfig = {
   table: 'media',
   title: 'Media Library',
   titleSingular: 'Media Item',
+  supportsSorting: false,
   displayField: (item) => item.name || 'Untitled',
   subtitleField: (item) => `${item.file_type} · ${item.alt_text || ''}`,
   fields: [
@@ -33,5 +34,15 @@ const config: ResourceConfig = {
 };
 
 export default function MediaPage() {
-  return <ResourceManager config={config} />;
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-dashed border-border/40 bg-card/30 p-4 text-sm text-muted-foreground">
+        <p className="font-medium text-foreground mb-2">مكتبة الوسائط / Media Library</p>
+        <p dir="rtl" className="leading-7">
+          هذه المكتبة تدير بيانات وروابط الوسائط المستخدمة في الموقع. لا توجد حاليًا وظيفة رفع مباشر للملفات عبر Supabase Storage في هذا التطبيق، لذلك تُستخدم الروابط الخارجية بشكل رئيسي للصور والفيديوهات والملفات المدعومة. يمكنك إضافة سجل وسائط، تعديل تفاصيله، أو حذفه إذا لم تعد بحاجة إليه.
+        </p>
+      </div>
+      <ResourceManager config={config} />
+    </div>
+  );
 }

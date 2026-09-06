@@ -41,6 +41,7 @@ export type ResourceConfig = {
   displayField: (item: any, locale: Locale) => string;
   subtitleField?: (item: any, locale: Locale) => string;
   statusField?: string;
+  supportsSorting?: boolean;
 };
 
 function emptyItem(config: ResourceConfig): any {
@@ -71,7 +72,8 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
       const data = await adminApi.list(config.table);
       setItems(data);
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(`Failed to load ${config.table}:`, err);
+      toast.error('تعذر تحميل البيانات. تأكد من اتصال قاعدة البيانات ثم حاول مرة أخرى.');
     } finally {
       setLoading(false);
     }
@@ -81,20 +83,22 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
 
   const handleSave = async (item: any) => {
     setSaving(true);
+    const loadingToast = toast.loading('جارٍ حفظ التغييرات...');
     try {
       if (creating) {
         await adminApi.create(config.table, item);
-        toast.success('Created successfully');
+        toast.success('تم الحفظ بنجاح', { id: loadingToast });
       } else {
         const { id, created_at, ...updateData } = item;
         await adminApi.update(config.table, item.id, updateData);
-        toast.success('Updated successfully');
+        toast.success('تم تحديث البيانات بنجاح', { id: loadingToast });
       }
       setEditing(null);
       setCreating(false);
       fetchItems();
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(`Failed to save ${config.table}:`, err);
+      toast.error('تعذر حفظ التغييرات. تأكد من صحة البيانات ثم حاول مرة أخرى.', { id: loadingToast });
     } finally {
       setSaving(false);
     }
@@ -104,28 +108,36 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
     if (!deleteId) return;
     try {
       await adminApi.remove(config.table, deleteId);
-      toast.success('Deleted');
+      toast.success('تم الحذف بنجاح');
       fetchItems();
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(`Failed to delete from ${config.table}:`, err);
+      toast.error('تعذر حذف العنصر. تأكد من اتصال قاعدة البيانات ثم حاول مرة أخرى.');
     } finally {
       setDeleteId(null);
     }
   };
 
   const handleMove = async (item: any, direction: 'up' | 'down') => {
+    if (!config.supportsSorting) return;
     const sorted = [...items].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
     const idx = sorted.findIndex(i => i.id === item.id);
+    if (idx < 0) return;
     if (direction === 'up' && idx === 0) return;
     if (direction === 'down' && idx === sorted.length - 1) return;
     const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
     const current = sorted[idx];
     const target = sorted[swapIdx];
-    await Promise.all([
-      adminApi.update(config.table, current.id, { sort_order: target.sort_order }),
-      adminApi.update(config.table, target.id, { sort_order: current.sort_order }),
-    ]);
-    fetchItems();
+    try {
+      await Promise.all([
+        adminApi.update(config.table, current.id, { sort_order: target.sort_order }),
+        adminApi.update(config.table, target.id, { sort_order: current.sort_order }),
+      ]);
+      fetchItems();
+    } catch (err: any) {
+      console.error(`Failed to reorder ${config.table}:`, err);
+      toast.error('تعذر تحديث الترتيب. تأكد من اتصال قاعدة البيانات ثم حاول مرة أخرى.');
+    }
   };
 
   const toggleVisible = async (item: any) => {
@@ -133,7 +145,8 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
       await adminApi.update(config.table, item.id, { visible: !item.visible });
       fetchItems();
     } catch (err: any) {
-      toast.error(err.message);
+      console.error(`Failed to toggle visibility for ${config.table}:`, err);
+      toast.error('تعذر تحديث حالة الظهور. تأكد من اتصال قاعدة البيانات ثم حاول مرة أخرى.');
     }
   };
 
@@ -163,11 +176,11 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
 
       {/* List */}
       {items.length === 0 ? (
-        <div className="text-center py-20 rounded-xl border border-dashed border-border/40">
-          <p className="text-muted-foreground mb-4">No {config.titleSingular.toLowerCase()}s yet</p>
+        <div className="text-center py-20 rounded-xl border border-dashed border-border/40 bg-card/20">
+          <p className="text-muted-foreground mb-4">لا توجد عناصر حاليًا / No {config.titleSingular.toLowerCase()}s yet</p>
           <Button onClick={() => { setEditing(emptyItem(config)); setCreating(true); }}>
             <Plus className="h-4 w-4 mr-2" />
-            Add your first {config.titleSingular.toLowerCase()}
+            إضافة أول عنصر / Add your first {config.titleSingular.toLowerCase()}
           </Button>
         </div>
       ) : (
@@ -177,14 +190,16 @@ export function ResourceManager({ config }: { config: ResourceConfig }) {
               key={item.id}
               className="flex items-center gap-3 p-3 rounded-xl border border-border/40 bg-card/30 hover:bg-card/50 transition-colors"
             >
-              <div className="flex flex-col gap-0.5">
-                <button onClick={() => handleMove(item, 'up')} disabled={i === 0} className="text-muted-foreground hover:text-foreground disabled:opacity-20">
-                  <ChevronUp className="h-3.5 w-3.5" />
-                </button>
-                <button onClick={() => handleMove(item, 'down')} disabled={i === items.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-20">
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </button>
-              </div>
+              {config.supportsSorting && (
+                <div className="flex flex-col gap-0.5">
+                  <button onClick={() => handleMove(item, 'up')} disabled={i === 0} className="text-muted-foreground hover:text-foreground disabled:opacity-20">
+                    <ChevronUp className="h-3.5 w-3.5" />
+                  </button>
+                  <button onClick={() => handleMove(item, 'down')} disabled={i === items.length - 1} className="text-muted-foreground hover:text-foreground disabled:opacity-20">
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
 
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-sm truncate">

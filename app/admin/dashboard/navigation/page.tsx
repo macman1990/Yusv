@@ -27,5 +27,15 @@ const config: ResourceConfig = {
 };
 
 export default function NavigationPage() {
-  return <ResourceManager config={config} />;
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-dashed border-border/40 bg-card/30 p-4 text-sm text-muted-foreground">
+        <p className="font-medium text-foreground mb-2">التنقل / Navigation</p>
+        <p dir="rtl" className="leading-7">
+          من هنا تتحكم في عناصر القائمة الظاهرة في شريط التنقل العام للموقع. كل عنصر يحتوي على تسمية ووصف أو رابط، ويمكن إظهاره أو إخفاءه. تعتمد القائمة على الروابط والحقول الحالية في قاعدة البيانات، لذلك تأكد من الربط الصحيح بين قيمة الرابط والنص باللغة العربية أو الإنجليزية.
+        </p>
+      </div>
+      <ResourceManager config={config} />
+    </div>
+  );
 }

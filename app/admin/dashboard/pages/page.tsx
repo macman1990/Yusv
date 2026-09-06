@@ -30,5 +30,15 @@ const config: ResourceConfig = {
 };
 
 export default function PagesPage() {
-  return <ResourceManager config={config} />;
+  return (
+    <div className="space-y-4">
+      <div className="rounded-xl border border-dashed border-border/40 bg-card/30 p-4 text-sm text-muted-foreground">
+        <p className="font-medium text-foreground mb-2">الصفحات / Pages</p>
+        <p dir="rtl" className="leading-7">
+          الصفحات هي صفحات مستقلة يمكن الوصول إليها عبر رابط أو مسار خاص. استخدم slug فريدًا لكل صفحة، ويمكنك تعديل العنوان، الوصف SEO، الصورة البارزة، والحالة المرئية. لا تُعد الأقسام بدائل للصفحات، لأن الصفحة تمثل صفحة مستقلة بينما القسم جزء داخل صفحة أو قالب محتوى.
+        </p>
+      </div>
+      <ResourceManager config={config} />
+    </div>
+  );
 }
