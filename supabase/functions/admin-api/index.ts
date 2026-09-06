@@ -62,22 +62,17 @@ async function handleAuth(action: string, body: any) {
       .maybeSingle();
     if (!config) return jsonResponse({ error: "Admin not configured" }, 500);
 
-    // Verify password using crypt comparison
-    const { data: result } = await admin.rpc("verify_password", {
-      password,
-      hash: config.password_hash,
-    }).then((r: any) => r).catch(() => ({ data: null }));
+    // Check the password against the stored bcrypt hash using the function contract that exists in the database.
+    const { data: checkResult } = await admin
+      .rpc("check_password", { input_password: password, stored_hash: config.password_hash })
+      .catch(() => ({ data: null }));
 
-    // Fallback: use SQL if RPC not available
-    let valid = false;
-    if (result !== null && result !== undefined) {
-      valid = result === true;
-    } else {
-      // Direct comparison via SQL
-      const { data: check } = await admin
-        .rpc("check_password", { input_password: password, stored_hash: config.password_hash });
-      valid = check === true;
-    }
+    // Backward-compatibility fallback if a legacy verify_password RPC exists in a previously-applied database state.
+    const { data: legacyVerifyResult } = await admin
+      .rpc("verify_password", { input_password: password, stored_hash: config.password_hash })
+      .catch(() => ({ data: null }));
+
+    const valid = checkResult === true || legacyVerifyResult === true;
 
     if (!valid) return jsonResponse({ error: "Invalid password" }, 401);
 
@@ -242,8 +237,9 @@ Deno.serve(async (req: Request) => {
   try {
     const url = new URL(req.url);
     const pathParts = url.pathname.split("/").filter(Boolean);
-    // pathParts: ["admin-api", action_or_table, id]
-    const segment = pathParts[1] || "";
+    const adminApiIndex = pathParts.indexOf("admin-api");
+    const segment = adminApiIndex >= 0 ? pathParts[adminApiIndex + 1] || "" : "";
+    const id = adminApiIndex >= 0 ? pathParts[adminApiIndex + 2] || null : null;
 
     const body = req.method !== "GET" && req.method !== "DELETE" ? await req.json().catch(() => ({})) : {};
 
@@ -264,9 +260,8 @@ Deno.serve(async (req: Request) => {
       return jsonResponse({ error: "Unauthorized" }, 401);
     }
 
-    // CRUD routes: segment is table name, pathParts[2] is id
+    // CRUD routes: segment is table name, id is optional path value after the table
     if (TABLES.includes(segment)) {
-      const id = pathParts[2] || null;
       return await handleCrud(req.method, segment, body, id, url.searchParams);
     }
 
